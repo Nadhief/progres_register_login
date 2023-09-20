@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model blog {
+  id          Int      @id @default(autoincrement())
+  picture_name String
+  is_active   Int
+}
+
+model user{
+  id Int @id @default(autoincrement())
+  nama_instansi String
+  email String @unique
+  no_sk String
+  userPassword String @unique
+  imageProfile String
+  no_telp String
+  alamat String
+  setuju String
+  is_verifikasi Int
+  is_role Int
+  updated_at DateTime @updatedAt
+
+  transaksis       transaksi[]
+  historis_login   histori_login[]
+}
+
+model transaksi {
+  id               Int      @id @default(autoincrement())
+  TglReg           DateTime
+  TglNaskah        DateTime
+  Hal              String
+  id_user          Int      // Foreign key ke model user
+  nama_instansi    String
+  telepon          String
+  FileDir          String
+  file_surat_name  String
+  tgl_verifikasi   DateTime
+
+  // Hubungan ke model user
+  user             user     @relation(fields: [id_user], references: [id])
+}
+
+model master_role{
+  id               Int      @id @default(autoincrement())
+  rule             String
+}
+
+model histori_login {
+  id             Int      @id @default(autoincrement())
+  id_user        Int      // Foreign key ke model user
+  nama_instansi  String
+  tgl_login      DateTime
+
+  // Hubungan ke model user
+  user           user     @relation(fields: [id_user], references: [id])
+}
+
